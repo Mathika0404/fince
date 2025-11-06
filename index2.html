@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stackly — Home Page 2 (Financial Insights & Engagement)</title>
+
+  <!-- External libs (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <style>
+    :root{
+      --bg:#0f1724; /* dark navy */
+      --card:#0b1220;
+      --accent:#1e90ff; /* main blue */
+      --accent-2:#6ec1ff; /* light blue */
+      --glass: rgba(255,255,255,0.03);
+      --muted:#9aa9bf;
+      --success:#2dd4bf;
+      --danger:#ff6b6b;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#061026 0%, #07132a 60%);color:#e6eef8}
+    .container{max-width:1200px;margin:30px auto;padding:24px}
+
+    /* Header */
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700}
+    nav{display:flex;gap:10px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px}
+    nav a.active,nav a:hover{background:var(--glass);color:var(--accent-2)}
+    .switch-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;cursor:pointer}
+
+    /* layout */
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:20px;margin-top:18px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+
+    /* main card */
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+    .card h3{margin:0 0 12px 0}
+
+    /* top hero */
+    .hero{display:flex;gap:18px;align-items:center}
+    .hero-left{flex:1}
+    .hero-right{width:280px}
+    .cta{display:flex;gap:10px;margin-top:14px}
+    .btn{background:var(--accent);border:none;padding:10px 14px;border-radius:10px;color:#012030;cursor:pointer;font-weight:600}
+    .btn.ghost{background:transparent;color:var(--accent-2);border:1px solid rgba(255,255,255,0.04)}
+
+    /* tools */
+    .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+    @media (max-width:640px){.tools{grid-template-columns:1fr}}
+    .tool{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+    .tool label{display:block;color:var(--muted);font-size:13px}
+    .tool input, .tool select{width:100%;padding:8px;margin-top:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+
+    /* chart container */
+    .chart-wrap{height:240px}
+
+    /* news */
+    .ticker{display:flex;overflow:hidden;gap:18px;padding:10px 0}
+    .ticker div{white-space:nowrap;display:inline-block;padding-right:24px;color:var(--accent-2)}
+
+    /* testimonials */
+    .testimonials{display:flex;gap:12px;overflow:hidden}
+    .test{min-width:280px}
+
+    /* accordion */
+    .faq .qa{border-top:1px dashed rgba(255,255,255,0.03);padding:12px 0}
+    .qa button{width:100%;text-align:left;background:transparent;border:none;color:var(--muted);padding:8px 0;cursor:pointer}
+
+    /* counters */
+    .counters{display:flex;gap:12px;margin-top:14px}
+    @media (max-width:680px){.counters{flex-direction:column}}
+    .counter{flex:1;background:linear-gradient(90deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));padding:12px;border-radius:10px;text-align:center}
+    .counter .num{font-size:20px;font-weight:700;color:var(--accent-2)}
+
+    /* right column */
+    .right .mini-card{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .pill{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted)}
+
+    footer{margin-top:26px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* small animations */
+    .glow{box-shadow:0 8px 32px rgba(30,144,255,0.08)}
+    .float{animation:float 6s ease-in-out infinite}
+    @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+
+    /* simple carousel buttons */
+    .carousel{position:relative}
+    .carousel-controls{display:flex;gap:8px;justify-content:center;margin-top:8px}
+    .small{font-size:13px;padding:6px 10px}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">S</div>
+        <div>
+          <div style="font-weight:700">Stackly Finance</div>
+          <div style="font-size:12px;color:var(--muted)">Insights & Engagement</div>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#" class="active">Home</a>
+        <a href="#tools">Tools</a>
+        <a href="#news">Market</a>
+        <a href="#learn">Learn</a>
+        <button id="toggleHome" class="switch-btn">Toggle: Home 1 / Home 2</button>
+      </nav>
+    </header>
+
+    <div class="grid">
+      <main>
+        <!-- HERO -->
+        <section class="card hero" data-aos="fade-up">
+          <div class="hero-left">
+            <h2 style="margin:0">Deep Financial Insights & Tools</h2>
+            <p style="color:var(--muted)">A companion page to your dashboard — interactive tools, market news, learning resources and trust builders that help visitors convert.</p>
+            <div class="cta">
+              <button class="btn" id="applyLoan">Apply for Loan</button>
+              <button class="btn ghost" id="bookCall">Book a Free Consultation</button>
+            </div>
+
+            <div class="counters" style="margin-top:18px">
+              <div class="counter card">
+                <div style="font-size:12px;color:var(--muted)">Loans Approved</div>
+                <div class="num" data-target="32000">0</div>
+              </div>
+              <div class="counter card">
+                <div style="font-size:12px;color:var(--muted)">Partner Banks</div>
+                <div class="num" data-target="28">0</div>
+              </div>
+              <div class="counter card">
+                <div style="font-size:12px;color:var(--muted)">Happy Customers</div>
+                <div class="num" data-target="52000">0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-right">
+            <div class="card glow float" style="padding:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="font-weight:700">Quick Market Ticker</div>
+                <div class="pill">Updated 5m ago</div>
+              </div>
+              <div class="ticker" id="ticker" style="margin-top:12px"></div>
+            </div>
+
+            <div class="card" style="margin-top:12px;padding:12px">
+              <div style="font-size:13px;color:var(--muted)">Newsletter</div>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <input id="newsEmail" placeholder="Email address" />
+                <button class="btn small" id="subscribe">Subscribe</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TOOLS -->
+        <section id="tools" class="card" data-aos="fade-up">
+          <h3>Interactive Tools</h3>
+          <div class="tools">
+            <!-- EMI Calculator -->
+            <div class="tool">
+              <div style="font-weight:700">EMI Calculator</div>
+              <label>Loan Amount (₹)</label>
+              <input type="number" id="emiAmount" value="500000" />
+              <label>Annual Interest Rate (%)</label>
+              <input type="number" id="emiRate" value="9.5" step="0.01" />
+              <label>Tenure (years)</label>
+              <input type="number" id="emiYears" value="5" />
+              <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" id="calcEmi">Calculate</button><div id="emiResult" style="align-self:center;color:var(--accent-2);font-weight:700">₹ 0 / month</div></div>
+            </div>
+
+            <!-- Investment Planner -->
+            <div class="tool">
+              <div style="font-weight:700">Investment Planner</div>
+              <label>Monthly SIP (₹)</label>
+              <input type="number" id="sipAmt" value="5000" />
+              <label>Expected Annual Return (%)</label>
+              <input type="number" id="sipReturn" value="8" step="0.1" />
+              <label>Duration (years)</label>
+              <input type="number" id="sipYears" value="10" />
+              <div style="margin-top:10px"><button class="btn" id="calcSip">Project</button></div>
+              <div class="chart-wrap" style="margin-top:8px"><canvas id="sipChart"></canvas></div>
+            </div>
+
+            <!-- Savings Goal Tracker -->
+            <div class="tool">
+              <div style="font-weight:700">Savings Goal Tracker</div>
+              <label>Goal Amount (₹)</label>
+              <input type="number" id="goalAmt" value="200000" />
+              <label>Current Savings (₹)</label>
+              <input type="number" id="currAmt" value="45000" />
+              <div style="margin-top:10px;display:flex;gap:8px;align-items:center"><button class="btn" id="trackGoal">Track</button><div id="goalProgress" style="font-weight:700;color:var(--accent-2)">0% complete</div></div>
+              <div style="height:10px;background:rgba(255,255,255,0.03);border-radius:8px;margin-top:12px;overflow:hidden"><div id="goalBar" style="height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2))"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MARKET NEWS -->
+        <section id="news" class="card" data-aos="fade-up">
+          <h3>Market Insights</h3>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:260px">
+              <div style="font-size:13px;color:var(--muted)">Latest Headlines</div>
+              <ul id="headlines" style="margin-top:8px"></ul>
+            </div>
+            <div style="flex:1;min-width:260px">
+              <div style="font-size:13px;color:var(--muted)">Top Gainers / Losers</div>
+              <div id="gainers" style="margin-top:8px"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- LEARN / FAQ -->
+        <section id="learn" class="card" data-aos="fade-up">
+          <h3>Learn & FAQ</h3>
+          <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div style="flex:2;min-width:300px">
+              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+                <article class="card" style="padding:12px">
+                  <h4>Understanding EMIs</h4>
+                  <p style="color:var(--muted);font-size:13px">Short explanation about EMIs and tips to reduce interest paid over time.</p>
+                </article>
+                <article class="card" style="padding:12px">
+                  <h4>Compound Interest</h4>
+                  <p style="color:var(--muted);font-size:13px">Simple illustrations to show the power of compounding for investments.</p>
+                </article>
+                <article class="card" style="padding:12px">
+                  <h4>Credit Score Tips</h4>
+                  <p style="color:var(--muted);font-size:13px">How to improve and monitor credit score safely.</p>
+                </article>
+                <article class="card" style="padding:12px">
+                  <h4>Safe Investing</h4>
+                  <p style="color:var(--muted);font-size:13px">Diversify and choose timeframe for risk mitigation.</p>
+                </article>
+              </div>
+            </div>
+
+            <div style="flex:1;min-width:260px">
+              <div class="faq card" style="padding:12px">
+                <div style="font-weight:700">Frequently asked</div>
+                <div class="qa"><button data-open>How do I apply for a loan?</button><div class="answer" style="display:none;color:var(--muted);margin-top:6px">Click Apply Loan, fill form, and attach KYC. Our team will call you.</div></div>
+                <div class="qa"><button data-open>How long for approval?</button><div class="answer" style="display:none;color:var(--muted);margin-top:6px">Usually 24-72 hours depending on documentation.</div></div>
+                <div class="qa"><button data-open>Are my details secure?</button><div class="answer" style="display:none;color:var(--muted);margin-top:6px">Yes — we use bank-grade encryption and secure storage.</div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="card" data-aos="fade-up">
+          <h3>Client Stories</h3>
+          <div class="testimonials" id="testimonials">
+            <div class="test card">
+              <div style="font-weight:700">Priya — Small Business</div>
+              <div style="color:var(--muted);margin-top:8px">"Stackly approved my business loan within 48 hours. Fast, reliable and friendly process."</div>
+            </div>
+            <div class="test card">
+              <div style="font-weight:700">Anand — Freelancer</div>
+              <div style="color:var(--muted);margin-top:8px">"Clear advice on repayment schedule helped me save thousands in interest."</div>
+            </div>
+            <div class="test card">
+              <div style="font-weight:700">Rekha — Homemaker</div>
+              <div style="color:var(--muted);margin-top:8px">"User friendly dashboard made it easy to keep track of my EMI payments."</div>
+            </div>
+          </div>
+          <div class="carousel-controls"><button class="switch-btn" id="prevTest">Prev</button><button class="switch-btn" id="nextTest">Next</button></div>
+        </section>
+
+      </main>
+
+      <!-- RIGHT COLUMN -->
+      <aside class="right">
+        <div class="card" data-aos="fade-left">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:700">Quick Actions</div>
+            <div class="pill">Secure</div>
+          </div>
+          <div class="mini-card" style="margin-top:12px"><button class="btn">Open Account</button><button class="btn ghost">Partner with us</button></div>
+
+          <div style="margin-top:12px">
+            <div style="font-size:13px;color:var(--muted)">Open Positions</div>
+            <ul style="margin-top:8px;color:var(--muted)"><li>Frontend Developer</li><li>Customer Success</li><li>Risk Analyst</li></ul>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px" data-aos="fade-left">
+          <div style="font-weight:700">Live Rates</div>
+          <div style="margin-top:8px;color:var(--muted)">Interest Rates</div>
+          <div style="display:flex;gap:8px;margin-top:8px"><div class="pill">Home Loan 7.5%</div><div class="pill">Personal 11.5%</div></div>
+
+          <div style="margin-top:12px"><div style="font-size:13px;color:var(--muted)">Currency</div><div style="margin-top:8px">USD/INR <strong id="usd">83.52</strong></div></div>
+        </div>
+
+        <div class="card" style="margin-top:12px;padding:12px" data-aos="fade-left">
+          <div style="font-weight:700">Contact & Support</div>
+          <div style="color:var(--muted);margin-top:8px">help@stackly.finance<br/>+91 98765 43210</div>
+          <div style="margin-top:10px"><button class="btn">Start Chat</button></div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      © <span id="year"></span> Stackly Finance • All rights reserved
+    </footer>
+  </div>
+
+<script>
+  // Initialize AOS
+  AOS.init({duration:700,once:true});
+
+  // Counters
+  document.querySelectorAll('.num').forEach(el=>{
+    const target = +el.dataset.target;
+    let cur=0; const step=Math.max(1,Math.floor(target/120));
+    const iv=setInterval(()=>{cur+=step; if(cur>=target){el.textContent=target.toLocaleString(); clearInterval(iv)} else el.textContent=cur.toLocaleString()},12)
+  })
+
+  // Ticker mock
+  const tickerEl = document.getElementById('ticker');
+  const tickers = ['NIFTY +0.42%','SENSEX +0.38%','USD/INR 83.52','Gold 62,300','Crude 83.1'];
+  tickerEl.innerHTML = tickers.map(t=>`<div>${t}</div>`).join('');
+  // simple horizontal scroll effect
+  let pos=0; setInterval(()=>{pos-=1; tickerEl.style.transform=`translateX(${pos}px)`; if(Math.abs(pos) > 300) pos=0},60)
+
+  // Simple headlines (mock) — you can replace with real fetch to news API
+  const headlines = [
+    'RBI reviews policy framework — what it means for borrowers',
+    'Top 5 ways to reduce EMI burden in 2025',
+    'Mutual funds see fresh inflows as SIPs rise'
+  ];
+  document.getElementById('headlines').innerHTML = headlines.map(h=>`<li style="color:var(--muted);margin-bottom:8px">${h}</li>`).join('');
+
+  // Gainers mock
+  const gainers = [{name:'ABC Ltd',chg:'+8.2%'},{name:'XYZ Bank',chg:'+5.1%'},{name:'LMN Corp',chg:'-3.2%'}];
+  document.getElementById('gainers').innerHTML = gainers.map(g=>`<div style="display:flex;justify-content:space-between;color:var(--muted);padding:6px 0"><div>${g.name}</div><div>${g.chg}</div></div>`).join('');
+
+  // EMI Calculator
+  function calcEmi(){
+    const P = +document.getElementById('emiAmount').value || 0;
+    const r = (+document.getElementById('emiRate').value || 0)/1200; // monthly
+    const n = (+document.getElementById('emiYears').value || 0) * 12;
+    let emi=0;
+    if(r===0) emi = P/n || 0; else {
+      emi = P * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1);
+    }
+    document.getElementById('emiResult').textContent = '₹ ' + Math.round(emi).toLocaleString();
+  }
+  document.getElementById('calcEmi').addEventListener('click',calcEmi);
+  calcEmi();
+
+  // SIP projection using Chart.js
+  let sipChart=null;
+  function projectSip(){
+    const monthly = +document.getElementById('sipAmt').value || 0;
+    const annual = (+document.getElementById('sipReturn').value || 0)/100;
+    const years = +document.getElementById('sipYears').value || 0;
+    const months = years*12;
+    const data=[]; let val=0;
+    for(let i=1;i<=months;i++){
+      val = (val + monthly) * (1 + annual/12);
+      if(i%12===0) data.push(Math.round(val));
+    }
+    const labels = Array.from({length:years},(_,i)=>`${i+1}y`);
+    if(sipChart) sipChart.destroy();
+    const ctx = document.getElementById('sipChart');
+    sipChart = new Chart(ctx,{
+      type:'line',
+      data:{labels, datasets:[{label:'Projected corpus',data,fill:true,tension:0.3}]},
+      options:{scales:{y:{beginAtZero:true}}}
+    });
+  }
+  document.getElementById('calcSip').addEventListener('click',projectSip);
+  projectSip();
+
+  // Goal tracker
+  function trackGoal(){
+    const goal = +document.getElementById('goalAmt').value || 0;
+    const curr = +document.getElementById('currAmt').value || 0;
+    const pct = Math.min(100,Math.round((curr/goal)*100));
+    document.getElementById('goalProgress').textContent = pct + '% complete';
+    document.getElementById('goalBar').style.width = pct + '%';
+  }
+  document.getElementById('trackGoal').addEventListener('click',trackGoal);
+  trackGoal();
+
+  // Testimonials carousel
+  const tests = Array.from(document.querySelectorAll('#testimonials .test'));
+  let tIdx=0;
+  function showTest(i){
+    tests.forEach((el,idx)=>el.style.display = idx===i ? 'block' : 'none');
+  }
+  document.getElementById('prevTest').addEventListener('click', ()=>{tIdx=(tIdx-1+tests.length)%tests.length;showTest(tIdx)});
+  document.getElementById('nextTest').addEventListener('click', ()=>{tIdx=(tIdx+1)%tests.length;showTest(tIdx)});
+  showTest(0);
+
+  // FAQ toggle
+  document.querySelectorAll('[data-open]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const a = btn.nextElementSibling; const open = a.style.display!=='none';
+      document.querySelectorAll('.faq .answer').forEach(x=>x.style.display='none');
+      if(!open) a.style.display='block';
+    });
+  });
+
+  // footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Toggle button to simulate switching to Home 1 (you can integrate single page toggle with real content)
+  document.getElementById('toggleHome').addEventListener('click', ()=>{
+    alert('Toggle clicked — integrate with your Home 1 content to switch without reload.');
+  });
+
+  // small interactions
+  document.getElementById('applyLoan').addEventListener('click', ()=>alert('Loan application flow should open here — implement your modal/form.'));
+  document.getElementById('bookCall').addEventListener('click', ()=>alert('Booking flow — open calendar to schedule.'));
+  document.getElementById('subscribe').addEventListener('click', ()=>{
+    const e = document.getElementById('newsEmail').value; if(!e) return alert('Enter email'); alert('Subscribed: '+e);
+  });
+
+  // small mock: live USD update (demo only)
+  setInterval(()=>{ const el=document.getElementById('usd'); let v=parseFloat(el.textContent); v += (Math.random()-0.5)*0.15; el.textContent = v.toFixed(2); },3000);
+
+</script>
+</body>
+</html>
